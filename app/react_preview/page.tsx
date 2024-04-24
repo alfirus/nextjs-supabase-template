@@ -1,5 +1,4 @@
 import PreviewReactComponent from "@/components/PreviewReactComponent"
-
 export default function Page() {
   return (
     <div className="w-full">
