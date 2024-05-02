@@ -34,7 +34,6 @@ export default function RenderReactComponent({ componentCode }: { componentCode:
           useState,
           useEffect
         )
-        console.log("Component:", Component)
 
         // 既存のルートを使用してレンダリング
         rootRef.current.render(<Component />)

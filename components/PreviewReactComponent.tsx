@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
 export default function PreviewReactComponent() {
-  const [code, setCode] = useState<string>("<div>Hello World</div>")
+  const [code, setCode] = useState<string>("function MainComponent() {\n  return <div>Hello World</div>\n}")
   const [componentCode, setComponentCode] = useState<string>("")
 
   return (
@@ -24,6 +24,7 @@ export default function PreviewReactComponent() {
             rows={100}
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            placeholder="Enter your React component code here"
           />
         </TabsContent>
         <TabsContent value="preview">
