@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import * as Babel from "@babel/standalone"
 import { createRoot } from "react-dom/client"
+import * as ChakraUI from "@chakra-ui/react"
 
 export default function RenderReactComponent({ componentCode }: { componentCode: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -29,10 +30,11 @@ export default function RenderReactComponent({ componentCode }: { componentCode:
         console.log("Transformed code:", transformedCode)
 
         // トランスパイルされたコードを関数として評価
-        const Component = new Function("React", "useState", "useEffect", `return ${transformedCode}`)(
+        const Component = new Function("React", "useState", "useEffect", "ChakraUI", `return ${transformedCode}`)(
           React,
           useState,
-          useEffect
+          useEffect,
+          ChakraUI
         )
 
         // 既存のルートを使用してレンダリング
