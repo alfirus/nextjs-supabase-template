@@ -14,4 +14,4 @@ docker-compose down
 
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/react_preview](http://localhost:3000/react_preview) with your browser to see the code and preview page.
