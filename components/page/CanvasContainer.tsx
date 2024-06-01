@@ -19,7 +19,6 @@ export default function CanvasContainer({ userPrompt }: { userPrompt: string }) 
       />
       <div className="flex h-full max-w-full flex-1 justify-center gap-4 overflow-hidden">
         <Canvas screen={screen} />
-
         {isOpenCodeContainer && <CodeContainer />}
       </div>
     </div>

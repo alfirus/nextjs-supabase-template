@@ -1,9 +1,17 @@
+'use client';
+
 import { Terminal, Clipboard, Info, Code } from 'lucide-react';
 import { sampleComponentCode } from '@/utils/const';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism-tomorrow.css';
+import { useState } from 'react';
 
 export default function CodeContainer() {
+  const [code, setCode] = useState(sampleComponentCode);
+  const handleCodeChange = (code: string) => setCode(code);
   return (
     <div
       className="animate-slide-left-in flex max-h-full min-w-[275px] flex-1 flex-col overflow-hidden rounded-lg border-2 border-black/10 bg-gray-50 bg-white text-gray-900 shadow-sm transition-all duration-200"
@@ -58,23 +66,25 @@ export default function CodeContainer() {
         </div>
       </div>
       <div className="relative flex-1 overflow-auto border-t">
-        <SyntaxHighlighter
-          language="jsx"
-          style={tomorrow}
-          customStyle={{
+        <Editor
+          value={code}
+          onValueChange={(value) => handleCodeChange(value)}
+          highlight={(code) => highlight(code, languages.js)}
+          padding={10}
+          style={{
             fontFamily: 'monospace',
             fontSize: '13px',
             lineHeight: '1.5',
-            margin: '0',
-            borderRadius: '0.5rem',
-            backgroundColor: '#1d1f21', // ダークテーマの背景色
+            backgroundColor: '#1d1f21',
+            color: '#fff',
             overflowX: 'auto',
+            borderRadius: '0.5rem',
           }}
+        />
+        <button
+          onClick={() => navigator.clipboard.writeText(code)}
+          className="absolute right-4 top-5 z-10 flex h-6 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-white px-1.5 text-xs font-medium text-gray-500 shadow-none transition-colors hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
-          {sampleComponentCode}
-        </SyntaxHighlighter>
-
-        <button className="absolute right-4 top-5 z-10 flex h-6 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-white px-1.5 text-xs font-medium text-gray-500 shadow-none transition-colors hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
           Copy Code
           <Clipboard className="h-4 w-4" />
           <span className="sr-only">Copy CLI command</span>
