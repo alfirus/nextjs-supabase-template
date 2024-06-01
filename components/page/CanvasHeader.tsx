@@ -8,11 +8,13 @@ import { Monitor, Tablet, Smartphone, Maximize, History, FlipHorizontal, Code, C
 import { Dispatch, SetStateAction } from 'react';
 
 export default function CanvasHeader({
+  userPrompt,
   screen,
   setScreen,
   isOpenCodeContainer,
   setIsOpenCodeContainer,
 }: {
+  userPrompt: string;
   screen: string;
   setScreen: Dispatch<SetStateAction<string>>;
   isOpenCodeContainer: boolean;
@@ -31,7 +33,7 @@ export default function CanvasHeader({
         <AvatarFallback>FC</AvatarFallback>
       </Avatar>
       <div className="overflow-hidden text-ellipsis rounded-2xl bg-[#ebebeb] px-3 py-1">
-        <span>あああああ</span>
+        <span>{userPrompt}</span>
       </div>
       <div className="ml-auto flex items-center gap-4">
         <div className="flex h-10 items-center gap-1 rounded-md border border-border bg-background p-1">

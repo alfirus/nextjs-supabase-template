@@ -1,11 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { use } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Zap } from 'lucide-react';
+import { useSendPrompt } from '@/hooks/useSendPrompt';
 
 export default function SendMessageContainer() {
+  const { setUserPrompt } = useSendPrompt();
+
+  const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.preventDefault();
+    setUserPrompt(e.target.value);
+  };
   return (
     <div className="z-40 flex w-full origin-bottom justify-center sm:-translate-y-1">
       <div className="relative z-10 flex h-12 min-h-12 w-full max-w-[540px] items-center justify-center gap-2 rounded-3xl bg-gray-900 px-2 shadow-lg transition-all duration-300 sm:shadow-black/40">
@@ -34,6 +41,7 @@ export default function SendMessageContainer() {
                     textarea.style.height = 'auto';
                     textarea.style.height = `${textarea.scrollHeight}px`;
                   }}
+                  onChange={handleChangeTextArea}
                 />
               </div>
               <div className="flex">

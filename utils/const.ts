@@ -1,3 +1,5 @@
+export const userPrompt = '占い師チャットbotを作って';
+
 export const sampleComponentCode = `function MainComponent() {
     const [userQuestion, setUserQuestion] = useState('');
     const [systemPrompt, setSystemPrompt] = useState('');

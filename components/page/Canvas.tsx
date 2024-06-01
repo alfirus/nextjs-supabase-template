@@ -1,7 +1,7 @@
 'use client';
 
 import { sampleComponentCode } from '@/utils/const';
-import RenderReactComponent from '../RenderReactComponent';
+import RenderReactComponent from './RenderReactComponent';
 export default function Canvas({ screen }: { screen: string }) {
   let screenClass = '';
 
