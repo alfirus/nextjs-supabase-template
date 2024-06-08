@@ -3,14 +3,11 @@ import { LifeBuoy, SquareUser, Triangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import HistoryContainer from '@/components/page/HistoryContainer';
+import Link from 'next/link';
 
 export default function Sidebar() {
   return (
-    <aside className="inset-y fixed left-0 z-20 flex h-full w-12 flex-col items-center justify-center border-r md:w-40">
-      <div className="flex items-center gap-4 border-b p-2">
-        <h1 className="text-xl font-semibold max-md:hidden">Eureka</h1>
-        <h1 className="text-xl font-semibold md:hidden">E</h1>
-      </div>
+    <aside className="inset-y fixed left-0 z-20 flex h-[calc(100%-3rem)] max-h-[calc(100%-3rem)] w-12 flex-col items-center justify-center overflow-auto border-r md:w-40">
       <div className="flex justify-center">
         <HistoryContainer />
       </div>
@@ -22,12 +19,14 @@ export default function Sidebar() {
             </Button>
             <span className="text-sm">Help</span>
           </div>
-          <div className="hidden items-center space-x-2 md:flex">
-            <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
-              <SquareUser className="size-5" />
-            </Button>
-            <span className="text-sm">Account</span>
-          </div>
+          <Link href={'/profile/user-id'}>
+            <div className="hidden items-center space-x-2 md:flex">
+              <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
+                <SquareUser className="size-5" />
+              </Button>
+              <span className="text-sm">Account</span>
+            </div>
+          </Link>
           <div className="md:hidden">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -40,14 +39,17 @@ export default function Sidebar() {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
-                  <SquareUser className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={5}>
-                Account
-              </TooltipContent>
+              <Link href={'/profile/user-id'}>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
+                    <SquareUser className="size-5" />
+                  </Button>
+                </TooltipTrigger>
+
+                <TooltipContent side="right" sideOffset={5}>
+                  Account
+                </TooltipContent>
+              </Link>
             </Tooltip>
           </div>
         </nav>
