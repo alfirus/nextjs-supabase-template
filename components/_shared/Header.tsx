@@ -31,8 +31,8 @@ export default function Header({ profile }: { profile: Profile | null }) {
       });
     } else {
       // login
-      router.push('/login');
     }
+    router.push('/login');
   };
   return (
     <header className="flex w-full flex-col gap-3 bg-white/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-white/60 md:h-12 md:flex-row md:items-center lg:px-4">
