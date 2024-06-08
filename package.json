@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:types": "npx supabase gen types typescript --project-id dpvgnwfobyoycczasfsq --schema public > types/supabase.ts"
   },
   "dependencies": {
     "@babel/standalone": "^7.24.4",
@@ -23,6 +24,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
     "@types/babel__standalone": "^7.1.7",
     "class-variance-authority": "^0.7.0",
