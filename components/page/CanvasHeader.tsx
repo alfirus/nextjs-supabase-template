@@ -6,14 +6,17 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { Separator } from '../ui/separator';
 import { Monitor, Tablet, Smartphone, Maximize, History, FlipHorizontal, Code, Code2, Proportions } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
+import { getPublicUrlFromServerClient } from '@/utils/getPublicUrlFromStorage';
 
 export default function CanvasHeader({
+  profile,
   userPrompt,
   screen,
   setScreen,
   isOpenCodeContainer,
   setIsOpenCodeContainer,
 }: {
+  profile: Profile;
   userPrompt: string;
   screen: string;
   setScreen: Dispatch<SetStateAction<string>>;
@@ -28,9 +31,14 @@ export default function CanvasHeader({
   };
   return (
     <div className="flex items-center pb-2">
-      <Avatar>
-        <AvatarImage src="/placeholder" alt="Avatar" />
-        <AvatarFallback>FC</AvatarFallback>
+      <Avatar className="mr-1 h-8 w-8">
+        <AvatarImage src={profile.avatar_img ? getPublicUrlFromServerClient('avatars', profile.avatar_img) : ''} alt="Avatar" />
+        <AvatarFallback>
+          <span className="sr-only">Avatar Fallback</span>
+          <svg className="h-full w-full" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </AvatarFallback>
       </Avatar>
       <div className="overflow-hidden text-ellipsis rounded-2xl bg-[#ebebeb] px-3 py-1">
         <span>{userPrompt}</span>

@@ -1,13 +1,7 @@
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
-import { customAlphabet } from 'nanoid';
 import { createClient } from '@/utils/supabase/server';
-
-// ランダムなusernameを生成するためのヘルパー関数
-const generateRandomUsername = () => {
-  const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 8);
-  return nanoid();
-};
+import { generateRandomUsername } from '@/utils/generateRandom';
 
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request: NextRequest) {
@@ -33,7 +27,7 @@ export async function GET(request: NextRequest) {
       // 初期はランダムなusernameを生成して、profilesテーブルに追加
       const { error: profileInsertError } = await supabaseServer
         .from('profiles')
-        .insert({ id: data.user?.id as string, username: generateRandomUsername() });
+        .insert({ user_id: data.user?.id as string, username: generateRandomUsername() });
       if (profileInsertError) {
         // return the user to an error page with some instructions
         console.log(profileInsertError);

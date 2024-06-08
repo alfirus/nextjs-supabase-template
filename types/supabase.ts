@@ -15,6 +15,8 @@ export type Database = {
           created_at: string
           displayname: string | null
           id: number
+          updated_at: string | null
+          user_id: string
           username: string
           website: string | null
         }
@@ -23,6 +25,8 @@ export type Database = {
           created_at?: string
           displayname?: string | null
           id?: number
+          updated_at?: string | null
+          user_id: string
           username: string
           website?: string | null
         }
@@ -31,10 +35,20 @@ export type Database = {
           created_at?: string
           displayname?: string | null
           id?: number
+          updated_at?: string | null
+          user_id?: string
           username?: string
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -27,6 +27,7 @@ export default function AuthForm() {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
                   placeholder="name@example.com"
                   type="email"
                   autoCapitalize="none"
@@ -36,7 +37,7 @@ export default function AuthForm() {
                 <Label className="sr-only" htmlFor="email">
                   Password
                 </Label>
-                <Input id="password" placeholder="********" type="password" autoCapitalize="none" autoCorrect="off" />
+                <Input id="password" name="password" placeholder="********" type="password" autoCapitalize="none" autoCorrect="off" />
               </div>
               <Button className="w-full" formAction={isLogin ? login : signup}>
                 {isLogin ? 'Sign in with Email' : 'Sign up with Email'}

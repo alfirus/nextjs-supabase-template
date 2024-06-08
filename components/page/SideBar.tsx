@@ -19,14 +19,14 @@ export default function Sidebar() {
             </Button>
             <span className="text-sm">Help</span>
           </div>
-          <Link href={'/profile/user-id'}>
+          {/* <Link href={'/profile'}>
             <div className="hidden items-center space-x-2 md:flex">
               <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
                 <SquareUser className="size-5" />
               </Button>
               <span className="text-sm">Account</span>
             </div>
-          </Link>
+          </Link> */}
           <div className="md:hidden">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -38,8 +38,8 @@ export default function Sidebar() {
                 Help
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <Link href={'/profile/user-id'}>
+            {/* <Tooltip>
+              <Link href={'/profile'}>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
                     <SquareUser className="size-5" />
@@ -50,7 +50,7 @@ export default function Sidebar() {
                   Account
                 </TooltipContent>
               </Link>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         </nav>
       </TooltipProvider>

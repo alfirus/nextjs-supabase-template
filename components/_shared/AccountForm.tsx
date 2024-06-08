@@ -1,112 +1,139 @@
 'use client';
+
 import { useCallback, useEffect, useState } from 'react';
-import { type User } from '@supabase/supabase-js';
-import { supabaseClient } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { generateRandomImageName } from '@/utils/generateRandom';
+import { usePathname, useRouter } from 'next/navigation';
+import { getPublicUrlFromBrowserClient } from '@/utils/getPublicUrlFromStorage';
 
-export default function AccountForm({ user }: { user: User | null }) {
-  const [loading, setLoading] = useState(true);
-  const [fullname, setFullname] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [website, setWebsite] = useState<string | null>(null);
-  const [avatar_url, setAvatarUrl] = useState<string | null>(null);
+export default function AccountForm({ profile }: { profile: Profile }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
+  const [displayName, setDisplayname] = useState<string | null>(profile.displayname ?? '');
+  const [userName, setUsername] = useState<string | null>(profile.username ?? '');
+  const [website, setWebsite] = useState<string | null>(profile.website ?? '');
+  const [avatarImg, setAvatarImg] = useState<string | null>(getPublicUrlFromBrowserClient('avatars', profile.avatar_img ?? ''));
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const getProfile = useCallback(async () => {
+  async function updateProfile() {
     try {
       setLoading(true);
+      if (userName === null || userName === '') {
+        alert('Username is required');
+        return;
+      }
+      const supabaseClient = createClient();
+      const avatarPath = await uploadAvatar();
 
-      const { data, error, status } = await supabaseClient
+      const { error } = await supabaseClient
         .from('profiles')
-        .select(`username, displayname website, avatar_img`)
-        .eq('id', user?.id)
-        .single();
-
-      if (error && status !== 406) {
-        console.log(error);
-        throw error;
-      }
-
-      if (data) {
-        setFullname(data.displayname);
-        setUsername(data.username);
-        setWebsite(data.website);
-        setAvatarUrl(data.avatar_img);
-      }
-    } catch (error) {
-      alert('Error loading user data!');
-    } finally {
-      setLoading(false);
-    }
-  }, [user, supabaseClient]);
-
-  useEffect(() => {
-    getProfile();
-  }, [user, getProfile]);
-
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string | null;
-    fullname: string | null;
-    website: string | null;
-    avatar_url: string | null;
-  }) {
-    try {
-      setLoading(true);
-
-      const { error } = await supabaseClient.from('profiles').upsert({
-        id: user?.id as string,
-        full_name: fullname,
-        username,
-        website,
-        avatar_url,
-        updated_at: new Date().toISOString(),
-      });
+        .update({
+          displayname: displayName,
+          username: userName,
+          website: website,
+          avatar_img: avatarPath ? avatarPath : profile.avatar_img,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', profile.user_id);
       if (error) throw error;
-      alert('Profile updated!');
+      if (pathname === '/first-setting-account') {
+        router.push('/');
+      }
     } catch (error) {
-      alert('Error updating the data!');
+      console.log(error);
+      // alert('Error updating the data!');
     } finally {
       setLoading(false);
     }
   }
 
+  const uploadAvatar = async () => {
+    if (avatarFile) {
+      try {
+        const formData = new FormData();
+        formData.append('avatar', avatarFile);
+        const extension = avatarFile.name.split('.').pop();
+        if (!extension) {
+          throw new Error('Invalid file extension');
+        }
+        const imageName = generateRandomImageName(extension);
+
+        const supabaseClient = createClient();
+        const { data, error } = await supabaseClient.storage.from('avatars').upload(`${imageName}`, formData);
+        if (error) {
+          console.log(error);
+          throw error;
+        }
+        return data.path;
+      } catch (error: any) {
+        console.log(error);
+        alert(error.message);
+      }
+    } else {
+      return null;
+    }
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarImg(URL.createObjectURL(file));
+    }
+  };
+
   return (
-    <div className="form-widget">
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={user?.email} disabled />
+    <div className="mx-auto flex w-full flex-col justify-center space-y-6 pb-24 sm:w-[400px]">
+      <div className="flex flex-col space-y-2 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Account Setting</h1>
+        <p className="text-sm text-muted-foreground">Update your account information</p>
       </div>
-      <div>
-        <label htmlFor="fullName">Full Name</label>
-        <input id="fullName" type="text" value={fullname || ''} onChange={(e) => setFullname(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input id="username" type="text" value={username || ''} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="website">Website</label>
-        <input id="website" type="url" value={website || ''} onChange={(e) => setWebsite(e.target.value)} />
-      </div>
+      <div className="grid gap-6">
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="text" value={profile.email} disabled />
+        </div>
 
-      <div>
-        <button
-          className="button primary block"
-          onClick={() => updateProfile({ fullname, username, website, avatar_url })}
-          disabled={loading}
-        >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
+        <div className="grid gap-2">
+          <Label htmlFor="fullName">Display Name</Label>
+          <Input
+            id="displayname"
+            name="displayname"
+            type="text"
+            value={displayName || ''}
+            onChange={(e) => setDisplayname(e.target.value)}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="username">Username</Label>
+          <Input id="username" name="username" type="text" value={userName || ''} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="website">Website</Label>
+          <Input id="website" name="website" type="url" value={website || ''} onChange={(e) => setWebsite(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="picture">Avatar</Label>
 
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
+          <Avatar className="mx-auto h-20 w-20">
+            <AvatarImage src={avatarImg || ''} alt="Avatar" />
+            <AvatarFallback>
+              <span className="sr-only">Avatar Fallback</span>
+              <svg className="h-full w-full" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </AvatarFallback>
+          </Avatar>
+          <Input id="picture" type="file" accept="image/*" onChange={handleAvatarChange} />
+        </div>
+        <Button className="w-full" onClick={updateProfile} disabled={loading}>
+          {loading ? 'Updating...' : 'Update Profile'}
+        </Button>
       </div>
     </div>
   );

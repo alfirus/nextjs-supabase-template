@@ -11,10 +11,29 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from '@/components/ui/navigation-menu';
-import { Home, ArrowRight, Grid, User, HelpCircle, CreditCard, DollarSign, LogOut } from 'lucide-react';
-import Link from 'next/link';
+import { getPublicUrlFromBrowserClient, getPublicUrlFromServerClient } from '@/utils/getPublicUrlFromStorage';
 
-export default function Header() {
+import { type User as UserType } from '@supabase/supabase-js';
+import { Home, ArrowRight, Grid, User, HelpCircle, CreditCard, DollarSign, LogOut, LogIn } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export default function Header({ profile }: { profile: Profile | null }) {
+  const router = useRouter();
+  const handleLoginLogout = async () => {
+    if (profile) {
+      // logout
+      await fetch('/api/auth/signout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } else {
+      // login
+      router.push('/login');
+    }
+  };
   return (
     <header className="flex w-full flex-col gap-3 bg-white/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-white/60 md:h-12 md:flex-row md:items-center lg:px-4">
       <div className="flex w-full items-center gap-8">
@@ -36,8 +55,16 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="https://vercel.com/api/www/avatar/p24fBmFTgaeuWPrR87Qc6clQ?s=64" alt="raimirarara" />
-                    <AvatarFallback>RA</AvatarFallback>
+                    <AvatarImage
+                      src={profile && profile.avatar_img ? getPublicUrlFromBrowserClient('avatars', profile.avatar_img) : ''}
+                      alt="profile"
+                    />
+                    <AvatarFallback>
+                      <span className="sr-only">Avatar Fallback</span>
+                      <svg className="h-full w-full" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </AvatarFallback>
                   </Avatar>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent
@@ -58,7 +85,7 @@ export default function Header() {
                     </NavigationMenuLink>
                     <NavigationMenuLink asChild>
                       <Link
-                        href="/raimirarara"
+                        href={profile ? '/profile' : '/login'}
                         className="relative flex flex select-none items-center items-center gap-3 rounded-md px-2 py-2.5 text-sm outline-none transition-colors focus:bg-zinc-100"
                         data-id="menu-profile"
                       >
@@ -78,9 +105,21 @@ export default function Header() {
                   </div>
                   <div role="separator" className="bg-geist-alpha-400 h-px" />
                   <div className="p-2">
-                    <button className="relative flex flex w-full select-none items-center items-center gap-3 rounded-md px-2 py-2.5 text-sm outline-none transition-colors focus:bg-zinc-100">
-                      <LogOut className="h-4 w-4 text-gray-600" />
-                      <span>Logout</span>
+                    <button
+                      className="relative flex flex w-full select-none items-center items-center gap-3 rounded-md px-2 py-2.5 text-sm outline-none transition-colors focus:bg-zinc-100"
+                      onClick={handleLoginLogout}
+                    >
+                      {profile ? (
+                        <>
+                          <LogOut className="h-4 w-4 text-gray-600" />
+                          <span>Logout</span>
+                        </>
+                      ) : (
+                        <>
+                          <LogIn className="h-4 w-4 text-gray-600" />
+                          <span>Login</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </NavigationMenuContent>

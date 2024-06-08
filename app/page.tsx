@@ -1,10 +1,15 @@
 import SendMessageContainer from '@/components/page/SendMessageContainer';
 import Header from '@/components/_shared/Header';
+import { getUserProfile } from '@/utils/getUserProfile';
 
-export default function Home() {
+export default async function Home() {
+  const profile = await getUserProfile();
+
+  console.log(profile);
+
   return (
     <main className="h-screen max-h-screen w-full overflow-hidden">
-      <Header />
+      <Header profile={profile} />
       <div className="flex h-screen w-full items-center justify-center pb-36 text-gray-900">
         <div className="relative flex w-full flex-col items-center gap-6 px-6 text-center">
           <div className="relative flex w-full flex-col items-center gap-1.5">
