@@ -18,6 +18,14 @@ export default async function ProfilePage() {
   if (!profile) {
     redirect('/');
   }
+  const pages = [
+    { userPrompt: 'Hello', thumbnailUrl: 'https://picsum.photos/800' },
+    { userPrompt: 'How are you?', thumbnailUrl: 'https://picsum.photos/800' },
+    { userPrompt: 'Nice to meet you', thumbnailUrl: 'https://picsum.photos/800' },
+    { userPrompt: "What's new?", thumbnailUrl: 'https://picsum.photos/800' },
+    { userPrompt: 'Have a great day!', thumbnailUrl: 'https://picsum.photos/800' },
+  ];
+
   return (
     <div className="h-screen w-full">
       <Header profile={profile} />
@@ -75,46 +83,46 @@ export default async function ProfilePage() {
             <Separator className="my-6" />
             <TabsContent value="recent" className="grid gap-12">
               <ul className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <li className="space-y-4">
-                  <div className="group relative block aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
-                    <Button
-                      variant="outline"
-                      className="bg-gs-blue-300 text-gs-blue-900 absolute right-2 top-2 z-10 h-8 w-8 rounded-sm p-0 md:right-1 md:top-1 md:h-5 md:w-5"
-                    >
-                      <Lock className="h-4 w-4 md:h-3 md:w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="absolute right-11 top-2 z-10 h-8 w-8 rounded-sm p-0 text-gray-500 hover:text-gray-900 md:right-7 md:top-1 md:h-5 md:w-5"
-                    >
-                      <Star className="h-4 w-4 md:h-3 md:w-3" />
-                    </Button>
-                    <AspectRatio ratio={1 / 1}>
-                      <Image src="/fortune.png" alt="image" fill />
-                    </AspectRatio>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={profile.avatar_img ? getPublicUrlFromServerClient('avatars', profile.avatar_img) : ''}
-                          alt="Avatar"
-                        />
-                        <AvatarFallback>
-                          <span className="sr-only">Avatar Fallback</span>
-                          <svg className="h-full w-full" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                          </svg>
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-1 items-center rounded-2xl bg-[#ebebeb] px-3 py-1">
-                        <span className="line-clamp-1 break-all text-left text-sm">Hello</span>
+                {pages.map((page) => (
+                  <li className="space-y-4">
+                    <div className="group relative block aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+                      <Button
+                        variant="outline"
+                        className="bg-gs-blue-300 text-gs-blue-900 absolute right-2 top-2 z-10 h-8 w-8 rounded-sm p-0 md:right-1 md:top-1 md:h-5 md:w-5"
+                      >
+                        <Lock className="h-4 w-4 md:h-3 md:w-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="absolute right-11 top-2 z-10 h-8 w-8 rounded-sm p-0 text-gray-500 hover:text-gray-900 md:right-7 md:top-1 md:h-5 md:w-5"
+                      >
+                        <Star className="h-4 w-4 md:h-3 md:w-3" />
+                      </Button>
+                      <AspectRatio ratio={1 / 1}>
+                        <Image src={page.thumbnailUrl} alt="image" fill />
+                      </AspectRatio>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={profile.avatar_img ? getPublicUrlFromServerClient('avatars', profile.avatar_img) : ''}
+                            alt="Avatar"
+                          />
+                          <AvatarFallback>
+                            <span className="sr-only">Avatar Fallback</span>
+                            <svg className="h-full w-full" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-1 items-center rounded-2xl bg-[#ebebeb] px-3 py-1">
+                          <span className="line-clamp-1 break-all text-left text-sm">{page.userPrompt}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-
-                {/* More items... */}
+                  </li>
+                ))}
               </ul>
             </TabsContent>
             <TabsContent value="stars">{/* Starred items */}</TabsContent>

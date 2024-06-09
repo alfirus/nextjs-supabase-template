@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { getUser } from './getUser';
 import { createClient } from './supabase/server';
 
@@ -16,9 +15,8 @@ export const getUserProfile = async () => {
     .eq('user_id', user.id)
     .single();
 
-  if (error) {
-    console.log(error);
-    redirect('/supabase-error');
+  if (error || !profile) {
+    return null;
   }
 
   return { ...profile, email: user.email } as Profile;

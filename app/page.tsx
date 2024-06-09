@@ -14,10 +14,10 @@ export default async function Home() {
             <h2 className="text-4xl font-semibold tracking-tighter sm:text-5xl [@media(max-width:480px)]:text-[2rem]">
               あなたのアイデアを形にしよう
             </h2>
-            <p>
-              Eurekaは簡単な文章から
+            <p className="text-gray-500">
+              Eurekaはチャット形式で
               <br className="sm:hidden" />
-              あなたの好きなアプリを作成できます
+              アプリやウェブサイトを作成できるサービスです
             </p>
           </div>
           <div className="w-full">
