@@ -44,12 +44,14 @@ export default function Header({ profile }: { profile: Profile | null }) {
           </Link>
         </div>
         <div className="ml-auto flex items-center gap-2 sm:gap-4">
-          <Button className="h-8 rounded-2xl" asChild>
-            <Link href="/">
-              <span className="hidden sm:inline">ページを作成</span>
-              <span className="sm:hidden">New</span>
-            </Link>
-          </Button>
+          {profile && (
+            <Button className="h-8 rounded-2xl" asChild>
+              <Link href="/">
+                <span className="hidden sm:inline">ページを作成</span>
+                <span className="sm:hidden">New</span>
+              </Link>
+            </Button>
+          )}
           <NavigationMenu className="pr-4">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -83,16 +85,18 @@ export default function Header({ profile }: { profile: Profile | null }) {
                         <span>Explore</span>
                       </Link>
                     </NavigationMenuLink>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href={profile ? '/profile' : '/login'}
-                        className="relative flex flex select-none items-center items-center gap-3 rounded-md px-2 py-2.5 text-sm outline-none transition-colors focus:bg-zinc-100"
-                        data-id="menu-profile"
-                      >
-                        <User className="h-4 w-4 text-gray-600" />
-                        <span>Profile</span>
-                      </Link>
-                    </NavigationMenuLink>
+                    {profile && (
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href={'/profile'}
+                          className="relative flex flex select-none items-center items-center gap-3 rounded-md px-2 py-2.5 text-sm outline-none transition-colors focus:bg-zinc-100"
+                          data-id="menu-profile"
+                        >
+                          <User className="h-4 w-4 text-gray-600" />
+                          <span>Profile</span>
+                        </Link>
+                      </NavigationMenuLink>
+                    )}
                     <NavigationMenuLink asChild>
                       <Link
                         href="/faq"

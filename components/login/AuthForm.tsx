@@ -4,14 +4,27 @@ import { login, signup } from '@/app/login/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function AuthForm() {
+export default function AuthForm({ onAuthSuccess }: { onAuthSuccess?: () => void }) {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
 
+  const handleAuth = async (formData: FormData) => {
+    if (isLogin) {
+      await login(formData);
+    } else {
+      await signup(formData);
+    }
+    if (onAuthSuccess) {
+      onAuthSuccess();
+    }
+  };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+    <div className="flex flex-col items-center justify-center">
+      <div className="mx-auto flex w-[350px] w-full flex-col justify-center space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">{isLogin ? 'Welcome back' : 'Create an account'}</h1>
           <p className="text-sm text-muted-foreground">
@@ -39,7 +52,7 @@ export default function AuthForm() {
                 </Label>
                 <Input id="password" name="password" placeholder="********" type="password" autoCapitalize="none" autoCorrect="off" />
               </div>
-              <Button className="w-full" formAction={isLogin ? login : signup}>
+              <Button className="w-full" formAction={(formData) => handleAuth(formData)}>
                 {isLogin ? 'Sign in with Email' : 'Sign up with Email'}
               </Button>
             </div>

@@ -5,8 +5,6 @@ import { getUserProfile } from '@/utils/getUserProfile';
 export default async function Home() {
   const profile = await getUserProfile();
 
-  console.log(profile);
-
   return (
     <main className="h-screen max-h-screen w-full overflow-hidden">
       <Header profile={profile} />
@@ -23,7 +21,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="w-full">
-            <SendMessageContainer />
+            <SendMessageContainer profile={profile} />
           </div>
           <div className="absolute top-full mx-auto mt-6 flex max-w-full flex-wrap items-center justify-center gap-2 whitespace-nowrap px-4 text-sm">
             <button className="inline-flex select-none items-center gap-1 whitespace-nowrap rounded-full border border-zinc-200 bg-white px-2 py-0.5 transition-colors hover:border-zinc-800">
